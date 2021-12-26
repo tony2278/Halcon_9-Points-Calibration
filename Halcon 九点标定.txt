@@ -1,0 +1,29 @@
+* 九点标定
+* https://blog.csdn.net/qq_45220555/article/details/110851091
+
+read_image (Image, 'D:/image/9点标定.jpg')
+rgb1_to_gray (Image, GrayImage)
+* 图像镜像，就是把9个点的序号按照自己习惯的方式在图像上显示
+mirror_image (GrayImage, ImageMirror, 'row')  
+* 图像亮度（灰度）不均匀时，使用这个算子平均一下图像灰度值
+illuminate (ImageMirror, ImageIlluminate, 101, 101, 0.5)
+* 缩放图像，使黑白更分明
+scale_image (ImageIlluminate, ImageScaled, 42.5, -4080)
+* 二值化提取黑或提取白
+binary_threshold (ImageScaled, Region, 'max_separability', 'dark', UsedThreshold)
+connection (Region, ConnectedRegions)
+select_shape (ConnectedRegions, SelectedRegions, 'area', 'and', 2000, 4000)
+area_center (SelectedRegions, Area, Row, Column)
+count_obj (SelectedRegions, Number)
+
+
+
+*九点标定 2x
+x pixel - 脉冲数 X   12.95
+y pixel - 脉冲数 Y   12.72
+
+*九点标定 6x
+x pixel - 脉冲数 X   6.99
+y pixel - 脉冲数 Y   6.98
+
+

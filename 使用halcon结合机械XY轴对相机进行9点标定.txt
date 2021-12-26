@@ -1,0 +1,42 @@
+先在halcon中计算仿射变换矩阵并验证
+//在图像中找到的模板中心位置
+PicX:=[1680.721,2065.147,911.499,526.798,1290.920,1285.731,1300.953]
+PicY:=[968.321,964.366,976.283,980.035,  587.055,394.727,1355.487]
+//与图像中查找到模板位置相对应的X轴坐标
+MachX1:=[142.123,152.123,122.123,112.123]  //开始移动时，找到的模板时的机械位置下同
+MachX2:=[135.220,135.220,135.220] 
+MachX:=[MachX1,MachX2]
+
+MachY1:=[-99.570,-99.570,-99.570,-99.570]   //开始移动时，找到的模板时的机械位置下同
+MachY2:=[-60.980,-55.980,-80.980] 
+MachY:=[MachY1,MachY2]
+
+vector_to_hom_mat2d (PicX, PicY, MachX, MachY, HomMat2D)  //求解变换矩阵HomMat2D
+affine_trans_point_2d (HomMat2D, PicX[3], PicY[3], Qx, Qy)      //根据模板中心坐标求取距离相机中心实际距离
+
+
+VS中使用
+//halcon求解出的矩阵
+*0.0259974， -0.000400101， -33.2988
+*-0.000265699， -0.0260035， 25.6161
+
+HTuple hv_HomMat2DIdentity;
+HomMat2dIdentity(&hv_HomMat2DIdentity);//初始化一个仿射变换矩阵
+
+//0.0259974 -0.000400101 -33.2988
+//-0.000265699 -0.0260035 25.6161
+hv_HomMat2DIdentity[0]=0.0259974;      //给仿射变换矩阵写入从halcon求取的值
+hv_HomMat2DIdentity[1]=-0.000400101;
+hv_HomMat2DIdentity[2]=-33.2988;
+hv_HomMat2DIdentity[3]=-0.000265699;
+hv_HomMat2DIdentity[4]=-0.0260035;
+hv_HomMat2DIdentity[5]=25.6161;
+
+HTuple hv_Qx,hv_Qy;
+AffineTransPoint2d(hv_HomMat2DIdentity, PicX, PicY, &hv_Qx, &hv_Qy);  //通过寻找模板的坐标求取模板中心距离相机中心的实际位置。
+
+
+
+
+
+
